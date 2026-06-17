@@ -59,7 +59,7 @@ def find_Rnormal(R, T, dT=0.5, T_normal=40):
     mask = (T > T_normal - dT) & (T < T_normal + dT)
     return np.mean(R[mask])
 
-def find_Tc(RTc, R, T, tolerance=0.1):
+def find_Tc(RTc, R, T, tolerance=0.3):
     dR = RTc * tolerance
     mask = (R > RTc - dR) & (R < RTc + dR)
     return np.mean(T[mask])
@@ -129,7 +129,7 @@ def plot_B_vs_Tc(df_results, coeffs, Tc_intersection, sample_id, outdir):
     plt.close(fig)
 
 def main(sample_id, dir_path, channel, dimensions,
-         approximate_B_c2=False, sc_criterion=0.9, T_normal=40):
+         approximate_B_c2=False, sc_criterion=0.5, T_normal=40):
 
     # print(f"Analyzing {sample_id}.")
 
@@ -234,7 +234,7 @@ def main(sample_id, dir_path, channel, dimensions,
         'xi_0': xi_0 * 1e9,           # m -> nm
         'N_0': N_0 / 1e6,             # 1/m^3 -> 1/cm^3
         'lambda_0': lambda_0 * 1e9,   # m -> nm
-        'L_k': L_k * 1e9,             # H/sq -> nH/sq
+        'L_k': L_k * 1e12,             # H/sq -> pH/sq
     }
 
     units = {
@@ -250,7 +250,7 @@ def main(sample_id, dir_path, channel, dimensions,
         'xi_0': 'nm',
         'N_0': '1/cm^3',
         'lambda_0': 'nm',
-        'L_k': 'nH/sq',
+        'L_k': 'pH/sq',
     }
 
     df_out = pd.DataFrame([units, params_display])
@@ -266,9 +266,10 @@ def main(sample_id, dir_path, channel, dimensions,
 
 if __name__ == "__main__":
     main(
-        sample_id="RAC017",
-        dir_path="RAC017/",
-        channel=2,
-        dimensions=(50e-6, 1e-3, 7e-9), # m
+        sample_id="RAC019",
+        dir_path="analysis/RAC019/",
+        channel=3,
+        dimensions=(50e-6, 1e-3, 20.3e-9), # m
+        sc_criterion=0.5,
         T_normal=40 # K
     )
